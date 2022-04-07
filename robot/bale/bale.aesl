@@ -1,0 +1,343 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<constant name="BW_LIMIT" value="650"/>
+<constant name="INTERVAL" value="3"/>
+<constant name="OFF" value="0"/>
+<constant name="ON" value="32"/>
+<constant name="RESET" value="0"/>
+<constant name="STRAIGHT" value="7"/>
+<constant name="S_READING" value="3"/>
+<constant name="S_READING_2" value="5"/>
+<constant name="S_WAIT_SYNC" value="2"/>
+<constant name="S_WAIT_SYNC_2" value="4"/>
+<constant name="TURN" value="6"/>
+
+
+<!--node Thymio-II Wireless-->
+<node nodeId="{d59b5d8b-3b82-440f-b888-40336b3461b8}" name="Thymio-II Wireless"><![CDATA[var state
+var intensityDiff
+var code
+var code2
+var counter 
+var counter2
+var counter3
+var running 
+var L[8]
+var time_straight_10cm = 500
+var time_turn_360 = 2900
+
+var R[] = [OFF,ON,ON,ON,OFF,OFF,OFF,ON]
+var V[] = [OFF,ON,OFF,OFF,ON,ON,OFF,ON]
+var B[] = [OFF,OFF,ON,OFF,ON,OFF,ON,ON]
+
+call leds.top(R[code], V[code], B[code])
+
+call leds.prox.v(0,0)
+call leds.prox.h(0,0,0,0,0,0,0,0)
+call leds.top(0,0,0)
+call leds.temperature(0,0)
+
+
+onevent button.forward
+
+
+if button.forward == 1 then
+	running = 1
+	state = S_WAIT_SYNC
+end
+
+onevent button.center
+
+	if  button.center == 1 then
+		state = RESET
+	end
+
+if  state == RESET then
+	state = 0
+	running = 0
+	code = 0
+	code2 = 0
+	timer.period[0] = 0
+	call leds.prox.h(0,0,0,0,0,0,0,0)
+	call leds.top(0,0,0)
+	counter = 0
+	counter2 = 0
+	counter3 = 0
+	motor.left.target = 0
+	motor.right.target = 0
+	L[0] = 0
+	L[1] = 0
+	L[2] = 0
+	L[3] = 0
+	L[4] = 0
+	L[5] = 0
+	L[6] = 0
+	L[7] = 0
+	call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+	call leds.top(R[code],V[code],B[code])	
+end
+
+onevent prox
+	if  running == 1 then
+
+			intensityDiff = prox.ground.delta[0]-525
+			
+			if abs(intensityDiff) < 170  then
+				motor.left.target = 215-intensityDiff/8
+				motor.right.target = 215+intensityDiff/8
+				
+			else
+				motor.left.target = -intensityDiff/4
+				motor.right.target = intensityDiff/4
+		    
+				state = S_WAIT_SYNC
+			end
+	
+	if state == S_WAIT_SYNC and prox.ground.delta[1] < BW_LIMIT then
+		state = S_READING
+		call leds.top(0,0,0)
+		call leds.circle(0,0,0,0,0,0,0,0)
+		counter = 0
+		
+	end
+
+	if state == S_READING then 
+
+		
+		if counter == 2 then
+			code=0
+			L[0] = ON
+		elseif counter == (2+INTERVAL) then
+		
+			if  prox.ground.delta[1]<BW_LIMIT then 
+				code = code + 1
+				L[1] = ON
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				
+			else 
+                code=0		
+			end
+		elseif counter == (2+2*INTERVAL) then
+		
+			if  prox.ground.delta[1]<BW_LIMIT then
+				code = code + 2
+				L[2] = ON		
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				
+			end
+		elseif counter == (2+3*INTERVAL) then
+		
+			if  prox.ground.delta[1]<BW_LIMIT then 
+				code = code + 4	
+				L[3] = ON		
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				call leds.top(R[code],V[code],B[code])
+			end
+			
+		elseif counter == (2+4*INTERVAL+3) then
+			state = S_WAIT_SYNC_2
+			call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+			call leds.top(R[code],V[code],B[code])
+		end
+		counter += 1
+	end
+	
+    if state == S_WAIT_SYNC_2 and prox.ground.delta[1] < BW_LIMIT then
+		state = S_READING_2
+		
+		call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+		call leds.top(R[code2],V[code2],B[code2])
+		counter2 = 0
+		
+	end
+	
+	
+	if state == S_READING_2 then 
+
+		if counter2 == 2 then
+			code2=0
+			L[4] = ON
+		
+		elseif counter2 == (2+INTERVAL) then
+		
+			if  prox.ground.delta[1]<BW_LIMIT then 
+				code2 = code2 + 1
+				L[5] = ON
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				
+			else 
+                code2=0
+			end
+		
+		elseif counter2 == (2+2*INTERVAL) then
+			
+			if  prox.ground.delta[1]<BW_LIMIT then
+				code2 = code2 + 2
+				L[6] = ON		
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])	
+
+			end
+			
+		elseif counter2 == (2+3*INTERVAL) then
+			
+			if  prox.ground.delta[1]<BW_LIMIT then 
+				code2 = code2 + 4	
+				L[7] = ON		
+				running = 2
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				call leds.top(R[code2],V[code2],B[code2])
+			else 
+				running = 2
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				call leds.top(R[code2],V[code2],B[code2])
+						
+			end
+			
+			elseif counter2 == (2+4*INTERVAL) then
+				running = 2
+				call leds.circle(L[0],L[1],L[2],L[3],L[4],L[5],L[6],L[7])
+				call leds.top(R[code2],V[code2],B[code2])
+			end
+		counter2 += 1
+	end
+end
+
+if  running == 2 then
+			
+			intensityDiff = prox.ground.delta[0]-525
+			
+			if abs(intensityDiff) < 170  then
+				motor.left.target = 115-intensityDiff/8
+				motor.right.target = 115+intensityDiff/8
+				
+			else
+				motor.left.target = -intensityDiff/4
+				motor.right.target = intensityDiff/4
+		    
+				running = 3
+			end
+end
+
+if  running == 3 then
+	motor.left.target = 300
+	motor.right.target = 300
+	
+	if  counter3 == 1 then
+		running = 0
+		state = TURN
+	end
+	counter3 += 1
+end
+
+
+
+if  state == TURN then
+		if code2 == 0 then
+			motor.right.target = 300
+			motor.left.target = -300
+			timer.period[0] = time_turn_360/2
+			
+			
+		elseif code2 == 1 then
+			motor.right.target = 300
+			motor.left.target = -300
+			timer.period[0] = 1090
+		
+		elseif code2 == 2 then
+			motor.right.target = -300
+			motor.left.target = 300
+			timer.period[0] = 1090
+			
+		elseif code2 == 3 then
+			motor.right.target = 300
+			motor.left.target = -300
+			timer.period[0] = time_turn_360/4
+			
+		elseif code2 == 4 then
+			motor.right.target = -300
+			motor.left.target = 300
+			timer.period[0] = time_turn_360/4
+			
+		elseif code2 == 5 then
+			motor.right.target = 300
+			motor.left.target = -300
+			timer.period[0] = time_turn_360/7
+			
+		elseif code2 == 6 then
+			motor.right.target = -300
+			motor.left.target = 300
+			timer.period[0] = time_turn_360/6
+			
+		elseif code2 == 7 then
+			motor.right.target = -300
+			motor.left.target = 300
+			timer.period[0] = time_turn_360/2
+		
+		end
+end
+
+
+onevent timer0
+	state = STRAIGHT
+	motor.right.target = 0
+	motor.left.target = 0
+	timer.period[0] = 0
+
+
+if  state == STRAIGHT then
+		if code == 0 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+			
+		elseif code == 1 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+		
+		elseif code == 2 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+		elseif code == 3 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+		elseif code == 4 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+		elseif code == 5 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+		elseif code == 6 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+			
+		elseif code == 7 then
+			motor.right.target = -400
+			motor.left.target = -400
+			timer.period[1] = time_straight_10cm*code
+		
+		end
+end
+
+
+onevent timer1
+	state = RESET
+	motor.right.target = 0
+	motor.left.target = 0
+	timer.period[1] = 0]]></node>
+
+
+</network>

@@ -1,0 +1,63 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event size="1" name="temp"/>
+<event size="1" name="vitesse"/>
+
+
+<!--node Thymio sur akli-Latitude-E6420 - 57-->
+<node name="Thymio sur akli-Latitude-E6420 - 57" nodeId="{e3f7e6e5-361b-454a-be68-9ef1dd8a567e}"><![CDATA[var etat = 0
+var t
+
+onevent buttons
+	#Le button.center mets fin a tout les etats et stop le robot
+	if  button.center == 1 then
+		etat = 0
+		t = 0
+		motor.left.target = 0
+		motor.right.target = 0
+	end
+	#Le button.forward avance le robot et la met dans un etat 1 avec un timer.period de 600 pour avancer vers la piste de calibration
+	if button.forward == 1 then
+		etat = 1
+		motor.left.target = 300
+		motor.right.target = 300
+		timer.period[0] = 600
+		timer.period[1] = 1000
+	end	
+onevent prox
+	#Quand le robot detecter une le noire (la piste) et qu'il est dans une etat 1 il avance tout droit et il passe à l'etat 2
+	if etat==1 and  prox.ground.reflected[0] < 650 and prox.ground.reflected[1] < 650  then
+		motor.left.target = 200
+		motor.right.target = 200
+		etat = 2
+	end
+	#Quand le robot detecter le blanc, donc il est arrive a la fin du la piste de calibration il recule et il passe à l'etat  3
+	if etat == 2 and prox.ground.reflected[0] > 650 and prox.ground.reflected[1] > 650    then
+		t = 0
+		motor.left.target = - 200
+		motor.right.target = - 200
+		etat=3
+	end
+	#Quand le robot detecter le blanc il fait marche arriere, il vas'arrete grace au timer de 600ms, donc il retournera dans l'etat 0 a l'arret
+onevent timer0
+	if etat == 3 and prox.ground.delta[0] > 650 and prox.ground.delta[1] > 650  then
+		etat = 0
+		motor.left.target = 0
+		motor.right.target = 0
+	end
+	emit vitesse motor.left.target
+	emit vitesse motor.right.target
+onevent timer1
+	#avec la  variable t, on peut definir le temps que le robot a mis pour pour parcourrir 40 cm
+	if   t > 10 then
+		etat = 0
+		motor.left.target = 0
+		motor.right.target = 0
+	end
+	emit temp t]]></node>
+
+
+</network>

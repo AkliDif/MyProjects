@@ -1,0 +1,80 @@
+un tableau de 2 dimensions de tuiles
+les tuiles seront des structures qui contiennent des variables route, villes, abbaye.
+
+
+Tuiles :
+	Cotés : 4
+	Pion : O/N
+	Special : 
+	Jouer : 0 si elle est posée id Joueur si elle est jouée
+	
+Grille :
+	elle contient des tuiles
+	dimension (x;y)
+	Max 72*2
+
+Pions :
+	7 par joueurs
+	Couleurs
+	Nom (Chevalier, voleur....)
+	Etat (posé ou pas)
+
+Joueurs :
+	5 au max
+	Tuile
+	pions
+	Score : COMPTE
+	Ordre
+	
+
+Pioche :
+	Tuiles mélangées (random)
+	
+
+ajouter une structure moteur pour rassembler les differentes methodes
+
+Methodes (Fonctions):
+	Creation des joueurs
+	Création des tuiles
+	Mélange des tuiles
+	Création des piles
+	Piochage d'une tuile
+	Emplacement des tuiles sur la grilles
+	Placement des pions
+	Positionnement des pions (Route ou ville)
+	Comptage des points
+
+
+
+		main.s(assembler) -----> objet.h  ----->v
+fichier.c ----------pour arruver au main---------> main.bin
+
+
+
+
+Rendu 
+
+Clien : exigences
+ -----> application : architeture : une vision globale de l'application.
+ -----> fonctionnalités : découper l'architecture sur pleusieurs fonctionnanlité.
+ -----> sous-fonctionnalités : découper chaque fonctionnalité à plusieurs sous-fonctionnalités (petit et moins complexe).
+ -----> 
+
+
+
+
+analyse :
+    analyse exactement ce qui demande le client
+    
+    
+    spefication :
+        ce qu'il faut faire pour réaliser l'analyse
+        
+        
+        preliminaire
+            comment réaliser les spec
+            
+            
+            
+            détaillé:
+                detailles le preliminaire
