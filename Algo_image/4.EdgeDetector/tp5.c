@@ -6,6 +6,24 @@
 #define C 2
 #define N 2
 
+#define SUEIL_MAX 30
+#define SUEIL_MIN 10
+
+
+
+struct list_t
+{
+    int x;
+    int y;
+    struct list_t* next;
+};
+
+typedef struct list_t list;
+
+list* init_list ()
+{
+    return NULL;
+}
 
 double W0(double x)
 {
@@ -624,20 +642,21 @@ unsigned char interpolation_pgm(float x, float y, picture *image)
     return 0;
 }
 
+
 void non_maxima_suppression(picture *norm, float **angle)
 {
     int i, j;
-    float c, s, g1, g2;
+    float c1, s1, g1, g2;
     for (i=0; i<norm->hauteur; i++)
         for (j=0; j<norm->largeur ; j++)
         {
             if (norm->pixels[i][j] != 0)
             {
-                c = cos (angle[i][j]);
-                s = sin (angle[i][j]);
-                g1 = interpolation_pgm (i+c, j+s, norm);
-                g2 = interpolation_pgm (i-c, j-s, norm);
-                if (norm->pixels[i][j] <g1 || norm->pixels[i][j] < g2)
+                c1 = cos (angle[j][i]);
+                s1 = sin (angle[j][i]);
+                g1 = interpolation_pgm (j+c1, i+s1, norm);
+                g2 = interpolation_pgm (j-c1, i-s1, norm);
+                if (norm->pixels[i][j] < g1 && norm->pixels[i][j] < g2)
                 {
                     norm->pixels[i][j] = 0;
                 }
@@ -645,42 +664,145 @@ void non_maxima_suppression(picture *norm, float **angle)
         }
 }
 
-int main (void)
+
+list* push_element (list* L, int x, int y)
 {
-    picture* image = get_picture ("lena.pgm");
+    list* res = (list*)malloc(sizeof(list));
+
+    if (res == NULL)
+    {
+        fprintf (stderr, "Error push element : malloc echoué\n");
+        exit(EXIT_FAILURE);
+    }
+
+    res->x = x;
+    res->y = y;
+    res->next = L;
+    return res;
+}
+
+
+list* suppression_element (list* L)
+{
+    list* T = L;
+    if (T != NULL)
+    {
+        L = L->next;
+        free(T);
+    }
+    return L;
+}
+
+
+
+void print_list (list* L)
+{
+    while (L != NULL)
+    {
+        printf ("(%d, %d) -> ", L->x, L->y);
+        L = L->next;
+    }
+    printf ("NULL\n");
     
-    picture* grad_x;
-    picture* grad_y;
-    picture* image_sobel;
+}
 
-    grad_x = sobel_x (image);
-    grad_y = sobel_y (image);
+void free_list(list *L)
+{
+    if(L == NULL)
+        return;
+    free_list(L->next);
+    free(L);
+}
 
-    write_picture (grad_x, "grad_x", 0);
-    write_picture (grad_y, "grad_y", 0);
+void hysteresis_thresholding(picture *image)
+{
+    list* L = init_list();
+    int i, j;
+    for (i=0 ; i<image->hauteur ; i++)
+    {
+        for (j=0 ; j<image->largeur ; j++)
+        {
+            if (image->pixels[i][j] < SUEIL_MIN)
+                image->pixels[i][j] = 0;
+
+            else
+            {
+                if (image->pixels[i][j] > SUEIL_MAX)
+                    L = push_element (L, j, i);
+                else
+                {
+                    for (int k=i-1 ; k<i+2 ; k++)
+                    {
+                        for (int t=j-1 ; t<j+2 ; t++)
+                        {
+                            if (image->pixels[k][t] > SUEIL_MAX)
+                            {
+                                L = push_element (L, j, i);
+                            }
+                            else 
+                            {
+                                image->pixels[i][j] = 0;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
-    image_sobel = sobel_edge_detector (image);
-    write_picture (image_sobel, "lena_sobel_edge_before.pgm", 0);
+    while (L != NULL)
+    {
+        image->pixels[L->y][L->x] = 255;
+        L = suppression_element (L);
+    }
 
-    float** angle;
-    angle = gradiant_angle (grad_x, grad_y);
+    free_list (L);
+    
+}
 
-    non_maxima_suppression (image_sobel, angle);
+picture *canny_edge_detector(picture *image)
+{
+    int i;
+    picture* grad_x = sobel_x (image);
+    picture* grad_y = sobel_y (image);
 
-    write_picture (image_sobel, "lena_sobel_edge_after.pgm", 0);
+    image = sobel_edge_detector (image);
+    float** angle = gradiant_angle (grad_x, grad_y);
 
-    for (int i=0 ; i <image->hauteur ; i++)
-        free (angle[i]);
+    non_maxima_suppression (image, angle);
+
+    hysteresis_thresholding (image);
+
+
+    for (i=0 ; i<image->hauteur ; i++)
+        free(angle[i]);
     free (angle);
 
-
-
-
-    free_picture (image);
     free_picture (grad_x);
     free_picture (grad_y);
+
+    return image;
+}
+
+
+int main (void)
+{
+    picture* image = get_picture ("imane.pgm");
+    picture* image_sobel;
+
+    image_sobel = sobel_edge_detector (image);
+    
+    write_picture (image_sobel, "imane_sobel.pgm", 0);
+    
+    picture* image_canny = canny_edge_detector (image);
+
+    write_picture (image_canny, "imane_canny.pgm", 0);
+
+    free_picture (image);
     free_picture (image_sobel);
+    free_picture (image_canny);
 
     return 0;
 }
