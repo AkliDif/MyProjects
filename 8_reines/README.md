@@ -1,6 +1,6 @@
 # 8 Reines
 
-Ce script python est une implémentation de problémes des 8 reines.
+Ce script python est une implémentation de problémes des 8 reines. Il est implémenter avec jupyter-notebook.
 
 Le problème des huit reines consiste à placer huit reines d'un jeu d'échec sur un échiquier de 8 × 8 cases sans que les reines ne se menacent mutuellement conformément aux règles du jeu d'échec (la couleur des reines étant ignorée).
 
