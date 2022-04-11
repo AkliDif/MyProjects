@@ -15,7 +15,7 @@ unsigned int charOccurenceInString(char c, char *string);
 char *getStringFromFile(char *filename);
 unsigned int nbDifferentChar(char *string);
 void printCouple(couple a);
-couple *getOccurencesList(char *string, unsigned int *n);
+couple *getOccurenceList(char *string, unsigned int *n);
 
 
 
