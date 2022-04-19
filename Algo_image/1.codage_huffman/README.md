@@ -7,4 +7,7 @@ pour exécuter ce programme il faut le compiler avec le MakeFile sous Linux, ens
 commande d'exécution : Ligne de compilation sous linux : make all
 
 
-Exécution avec valgrind : valgrind ./main nom_fichier.txt
+Déboguer avec valgrind : valgrind ./main nom_fichier.txt
+
+
+Exécution : ./main nom_fichier.txt
