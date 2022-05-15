@@ -202,18 +202,55 @@ void affichage_plateau (Tuile ** plateau)
 
 int update_plateau (Tuile** plateau, Tuile *T)
 {
-    int i, j, posable = 0;
+    Tuile *temp = T;
+    int i, j, posable = 0, nb_rotate = 0;
     for (i=0 ; i<72 ; i++)
     {
         for (j=0 ; j<72 ; j++)
         {
-            if (plateau[i][j].vide == 0)
-            {
-                if (i-1 >= 0 && j-1 >= 0 && j+1 <= NB_TUILE_MAX && plateau[i-1][j].vide == 1 && plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1)
+            if (plateau[i][j].vide == 0 )
+            {   
+                if (i-1 >= 0 && j-1 >= 0 && j+1 <= NB_TUILE_MAX && i-2 >=0 && plateau[i-1][j].vide == 1 )
                 {
-                    if (i-2 >= 0 && plateau[i-2][j].vide == 1)
+                    while (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) != 0 && nb_rotate <4)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, T->cote_C->type) == 0)
+                        temp = rotate_tuile (temp);
+                        nb_rotate++;
+                    }
+                    
+                    if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 1)
+                    {
+                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0)
+                        {
+                            plateau[i-1][j].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    else if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0)
+                        {
+                            plateau[i-1][j].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        {
+                            plateau[i-1][j].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j-1].vide == 0 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i-1][j-1].cote_B->type, temp->cote_D->type) == 0)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -221,39 +258,172 @@ int update_plateau (Tuile** plateau, Tuile *T)
                         }
                     }
                 }
-                if (i+1 <= NB_TUILE_MAX && j-1 >= 0 && j+1 <= NB_TUILE_MAX && plateau[i+1][j].vide == 1 && plateau[i+1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1)
+    /*---------------------------------------------------------------------------------------------------------------------------*/
+                temp = T;
+                nb_rotate = 0;
+
+
+                if (i+1 <= NB_TUILE_MAX && j-1 >= 0 && j+1 <= NB_TUILE_MAX && i+2 <=NB_TUILE_MAX && plateau[i+1][j].vide == 1 )
                 {
-                    if (i+2 <= NB_TUILE_MAX && plateau[i+2][j].vide == 1)
+                    while (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) != 0 && nb_rotate <4)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, T->cote_A->type) == 0)
+                        temp = rotate_tuile (temp);
+                        nb_rotate++;
+                    }
+                    
+                    if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 1)
+                    {
+                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0)
+                        {
+                            plateau[i+1][j].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        {
+                            plateau[i+1][j].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i+1][j-1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        {
+                            plateau[i+1][j].available = 1;
+                            posable = 1;
+
                         }
                     }
                 }
-                if (j-1 >= 0 && i-1 >= 0 && i+1 <= NB_TUILE_MAX && plateau[i][j-1].vide == 1 && plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 1)
+
+    /*---------------------------------------------------------------------------------------------------------------*/            
+
+                temp = T;
+                nb_rotate = 0;
+
+
+                if (j-1 >= 0 && i-1 >= 0 && i+1 <= NB_TUILE_MAX && j-2 >=0 && plateau[i][j-1].vide == 1 )
                 {
-                    if (j-2 >= 0 && plateau[i][j-2].vide == 1)
+                    while (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) != 0 && nb_rotate <4)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, T->cote_B->type) == 0)
+                        temp = rotate_tuile (temp);
+                        nb_rotate++;
+                    }
+                    
+                    if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 1)
+                    {
+                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0)
+                        {
+                            plateau[i][j-1].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j-1].cote_A->type, temp->cote_C->type) == 0)
+                        {
+                            plateau[i][j-1].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j-1].vide == 0 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j-1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        {
+                            plateau[i][j-1].available = 1;
+                            posable = 1;
+
                         }
                     }
                 }
-                if (j+1 <= NB_TUILE_MAX && i-1 >= 0 && i+1 <= NB_TUILE_MAX && plateau[i][j+1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i-1][j+1].vide == 1)
+
+
+
+    /*---------------------------------------------------------------------------------------------------------------*/            
+
+                temp = T;
+                nb_rotate = 0;
+
+
+                if (j+1 <= NB_TUILE_MAX && i-1 >= 0 && i+1 <= NB_TUILE_MAX && j+2 <=NB_TUILE_MAX && plateau[i][j+1].vide == 1 )
                 {
-                    if (j+2 <= NB_TUILE_MAX && plateau[i][j+2].vide == 1)
+                    while (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) != 0 && nb_rotate <4)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, T->cote_D->type) == 0)
+                        temp = rotate_tuile (temp);
+                        nb_rotate++;
+                    }
+                    
+                    if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 1)
+                    {
+                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0)
+                        {
+                            plateau[i][j+1].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0)
+                        {
+                            plateau[i][j+1].available = 1;
+                            posable = 1;
+
+                        }
+                    }
+
+                    if (plateau[i-1][j+1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 0)
+                    {
+                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j+1].cote_C->type, temp->cote_A->type) == 0)
+                        {
+                            plateau[i][j+1].available = 1;
+                            posable = 1;
+
                         }
                     }
                 }
+
             }
         }
     }
