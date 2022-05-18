@@ -9,3 +9,4 @@
 			- cherche la structure correspondante
 			- combien de meeples il y a sur cette structure ?
 			- le joueur avec le plus de meeples sur cette structure remporte les points
+

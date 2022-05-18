@@ -185,7 +185,7 @@ int main (void)
     SDL_Texture* pioche_text, *table_text;
 /*--------------------------------traitements ---------------------------------*/
 
-    table_text = create_texture (renderer, "table.png");
+    table_text = create_texture (renderer, "./img/table.png");
     pioche_text = create_texture (renderer, tab_images[nb_image]);
 
     afficher_pile (P);
@@ -258,7 +258,7 @@ int main (void)
                                 print_tile(pioche);
                             }
                             else
-                                printf ("Emplacement non valabe\n");
+                                printf ("\n\nEmplacement non valabe\n");
                         }
                         break;
                     
