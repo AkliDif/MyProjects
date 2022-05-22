@@ -30,11 +30,11 @@ Tuile* creer_tuile (char cote_A[10], char cote_B[10], char cote_C[10], char cote
     strcpy (T->cote_C->type, cote_C);
     strcpy (T->cote_D->type, cote_D);
     strcpy (T->cote_E->type, cote_E);
-    T->cote_A->occupe = 0;
-    T->cote_B->occupe = 0;
-    T->cote_C->occupe = 0;
-    T->cote_D->occupe = 0;
-    T->cote_E->occupe = 0;
+    T->cote_A->vide = 1;
+    T->cote_B->vide = 1;
+    T->cote_C->vide = 1;
+    T->cote_D->vide = 1;
+    T->cote_E->vide = 1;
     T->nb = num;
     T->Joue = 1;
     T->id_tuile = id_tuile;
@@ -87,11 +87,11 @@ Tuile* get_tiles_from_file ()
     while(!feof(fichier))
     {
         fscanf(fichier, "%s %s %s %s %s %d ", temp[i].cote_A->type, temp[i].cote_B->type, temp[i].cote_C->type, temp[i].cote_D->type, temp[i].cote_E->type, &temp[i].id_tuile);
-        temp[i].cote_A->occupe = 0;
-        temp[i].cote_B->occupe = 0;
-        temp[i].cote_C->occupe = 0;
-        temp[i].cote_D->occupe = 0;
-        temp[i].cote_E->occupe = 0;
+        temp[i].cote_A->vide = 1;
+        temp[i].cote_B->vide = 1;
+        temp[i].cote_C->vide = 1;
+        temp[i].cote_D->vide = 1;
+        temp[i].cote_E->vide = 1;
         temp[i].nb = i+1;
         temp[i].Joue = 0;
         i++;

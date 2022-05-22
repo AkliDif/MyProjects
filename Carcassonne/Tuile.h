@@ -4,11 +4,11 @@
 #define NB_TUILE_MAX 72
 #define NB_MAX_MEEPLE 7
 
+
 struct meeple_t
 {
-    int pose;
     int num_player;
-    int color;
+    int coleur;
 };
 
 typedef struct meeple_t Meeple;
@@ -17,7 +17,7 @@ struct cote_t
 {
     char type[10];
     Meeple* Pion;
-    int occupe;
+    int vide;
 };
 
 typedef struct cote_t Cote;
@@ -40,7 +40,8 @@ struct tuile_t
 typedef struct tuile_t Tuile;
 
 
-int pose_meeple (Tuile *T, Meeple *M, char cote);
+int pose_meeple (Tuile *T, Meeple *M, int cote, int num_player);
+Meeple* create_meeples (int num_player);
 
 Tuile* creer_tuile (char cote_A[10], char cote_B[10], char cote_C[10], char cote_D[10], char cote_E[10], int num, int id_tuile);
 void free_tile (Tuile *T);

@@ -8,9 +8,10 @@
 #include "Player.h"
 #include "Tuile.h"
 
+#define color(param) printf("\033[%sm",param)
 
-char tab_color[6][2] = {"47", "40", "41", "42", "43", "44"};
-
+//  30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu| 35 Magenta | 36 Cyan | 37 Blanc
+char *tab_color[6] = {"0", "31", "32", "33", "34", "35"};
 
 Tuile** creer_plateau ()
 {
@@ -50,6 +51,12 @@ Tuile** creer_plateau ()
             plateau[i][j].cote_C->Pion = (Meeple*)malloc(sizeof(Meeple));
             plateau[i][j].cote_D->Pion = (Meeple*)malloc(sizeof(Meeple));
             plateau[i][j].cote_E->Pion = (Meeple*)malloc(sizeof(Meeple)); 
+
+            plateau[i][j].cote_A->vide = 1;
+            plateau[i][j].cote_B->vide = 1;
+            plateau[i][j].cote_C->vide = 1;
+            plateau[i][j].cote_D->vide = 1;
+            plateau[i][j].cote_E->vide = 1;
             
         }
     }
@@ -140,6 +147,7 @@ void affichage_plateau (Tuile ** plateau)
     for (int i=0 ; i<71 ; i++)
         strcat (border, mot);
     strcat (border, plus);
+
     for (int i=0 ; i<NB_TUILE_MAX ; i++)
     {
         printf ("%s\n", border);
@@ -156,7 +164,14 @@ void affichage_plateau (Tuile ** plateau)
             else
             {
                 printf ("|");
-                printf ("  %s  ", plateau[i][j].cote_A->type);
+                if (plateau[i][j].cote_A->vide != 1)
+                {
+                    color (tab_color[plateau[i][j].cote_A->Pion->coleur]);
+                    printf ("  %s  ", plateau[i][j].cote_A->type);
+                }
+                else
+                    printf ("  %s  ", plateau[i][j].cote_A->type);
+                color (tab_color[0]);
             }
         }
         printf ("\n");
