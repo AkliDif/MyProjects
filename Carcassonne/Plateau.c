@@ -11,7 +11,7 @@
 #define color(param) printf("\033[%sm",param)
 
 //  30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu| 35 Magenta | 36 Cyan | 37 Blanc
-char *tab_color[6] = {"0", "31", "32", "33", "34", "35"};
+char *tab_color[6] = {"0", "30", "31", "32", "34", "35"};
 
 Tuile** creer_plateau ()
 {
@@ -168,10 +168,10 @@ void affichage_plateau (Tuile ** plateau)
                 {
                     color (tab_color[plateau[i][j].cote_A->Pion->coleur]);
                     printf ("  %s  ", plateau[i][j].cote_A->type);
+                    color (tab_color[0]);
                 }
                 else
                     printf ("  %s  ", plateau[i][j].cote_A->type);
-                color (tab_color[0]);
             }
         }
         printf ("\n");
@@ -187,9 +187,34 @@ void affichage_plateau (Tuile ** plateau)
             else
             {
                 printf ("|");
-                printf ("%s ", plateau[i][j].cote_D->type);
-                printf ("%s ", plateau[i][j].cote_E->type);
-                printf ("%s", plateau[i][j].cote_B->type);
+                if (plateau[i][j].cote_D->vide != 1)
+                {
+                    color (tab_color[plateau[i][j].cote_D->Pion->coleur]);
+                    printf ("%s", plateau[i][j].cote_D->type);
+                    color (tab_color[0]);
+                }
+                else
+                    printf ("%s", plateau[i][j].cote_D->type);
+                
+                if (plateau[i][j].cote_E->vide != 1)
+                {
+                    color (tab_color[plateau[i][j].cote_E->Pion->coleur]);
+                    printf (" %s ", plateau[i][j].cote_E->type);
+                    color (tab_color[0]);
+                }
+                else
+                    printf (" %s ", plateau[i][j].cote_E->type);
+                
+
+                if (plateau[i][j].cote_B->vide != 1)
+                {
+                    color (tab_color[plateau[i][j].cote_B->Pion->coleur]);
+                    printf ("%s", plateau[i][j].cote_B->type);
+                    color (tab_color[0]);
+                }
+                else
+                    printf ("%s", plateau[i][j].cote_B->type);
+
             }
         }
         printf ("\n");
@@ -205,7 +230,14 @@ void affichage_plateau (Tuile ** plateau)
             }
             else
             {
-                printf ("|  %s  ", plateau[i][j].cote_C->type);
+                if (plateau[i][j].cote_C->vide != 1)
+                {
+                    color (tab_color[plateau[i][j].cote_C->Pion->coleur]);
+                    printf ("  %s  ", plateau[i][j].cote_C->type);
+                    color (tab_color[0]);
+                }
+                else
+                    printf ("  %s  ", plateau[i][j].cote_C->type);
 
             }
         }

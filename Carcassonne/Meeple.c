@@ -44,43 +44,43 @@ int pose_meeple (Tuile *T, Meeple *M, int cote, int num_player)
         {
             T->cote_B->Pion = M;
             T->cote_B->vide = 0;
-            T->cote_A->Pion->coleur = num_player;
+
             pose = 1;
         }
         break;
 
     case 3:
-        if (T->cote_C->vide == 1)
+        if (T->cote_C->vide != 1)
             printf("Il y a déjà un meeple\n");
         else
         {
             T->cote_C->Pion = M;
             T->cote_C->vide = 0;
-            T->cote_A->Pion->coleur = num_player;
+
             pose = 1;
         }
         break;
     
     case 4:
-        if (T->cote_D->vide == 1)
+        if (T->cote_D->vide != 1)
             printf("Il y a déjà un meeple\n");
         else
         {
             T->cote_D->Pion = M;
             T->cote_D->vide = 0;
-            T->cote_A->Pion->coleur = num_player;
+
             pose = 1;
         }
         break;
     
     case 5:
-        if (T->cote_E->vide == 1)
+        if (T->cote_E->vide != 1)
             printf("Il y a déjà un meeple\n");
         else
         {
             T->cote_E->Pion = M;
             T->cote_E->vide = 0;
-            T->cote_A->Pion->coleur = num_player;
+
             pose = 1;
         }
         break;
@@ -89,7 +89,7 @@ int pose_meeple (Tuile *T, Meeple *M, int cote, int num_player)
         break;
     }
 
-    if (strcmp (T->cote_E->type, T->cote_A->type) == 0)
+   /*if (strcmp (T->cote_E->type, T->cote_A->type) == 0)
     {
         if (T->cote_E->vide == 0 || T->cote_A->vide == 0)
         {
@@ -123,7 +123,7 @@ int pose_meeple (Tuile *T, Meeple *M, int cote, int num_player)
             T->cote_E->vide == 0;
             T->cote_D->vide == 0;
         }
-    }
+    }*/
 
     return pose;
 }

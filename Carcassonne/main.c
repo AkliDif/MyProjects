@@ -31,12 +31,20 @@ int main (void)
         tab_player[i] = create_player(i+1);
     }
 
+    Meeple* noire = (Meeple*)malloc(sizeof(Meeple));
+    noire->coleur = 1;
+
+    Meeple* rouge = (Meeple*)malloc(sizeof(Meeple));
+    rouge->coleur = 2;
 
     Meeple* vert = (Meeple*)malloc(sizeof(Meeple));
-    vert->coleur = 2;
-    Meeple* rouge = (Meeple*)malloc(sizeof(Meeple));
-    rouge->coleur = 1;
+    vert->coleur = 3;
 
+    Meeple* blue = (Meeple*)malloc(sizeof(Meeple));
+    blue->coleur = 4;
+
+    Meeple* magenta = (Meeple*)malloc(sizeof(Meeple));
+    magenta->coleur = 5;
 
     Pile* P = creer_pile ();
 
@@ -112,9 +120,15 @@ int main (void)
             scanf("%d", &c);
 
             if (num_player == 1)
-                pose_meeple (&Plateau[ligne][colonne], rouge, c, num_player);
+                pose_meeple (&Plateau[ligne][colonne], noire, c, num_player);
             if (num_player == 2)
+                pose_meeple (&Plateau[ligne][colonne], rouge, c, num_player);
+            if (num_player == 3)
                 pose_meeple (&Plateau[ligne][colonne], vert, c, num_player);
+            if (num_player == 4)
+                pose_meeple (&Plateau[ligne][colonne], blue, c, num_player);
+            if (num_player == 5)
+                pose_meeple (&Plateau[ligne][colonne], magenta, c, num_player);
         }
     }
     
