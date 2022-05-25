@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "Meeple.h"
 #include "Pile.h"
 #include "Plateau.h"
 #include "Player.h"
@@ -10,7 +9,7 @@
 
 //------------------------------ empilage d'une tuile sur la pile ------------------------------------
 
-Tuile* creer_tuile (char cote_A[10], char cote_B[10], char cote_C[10], char cote_D[10], char cote_E[10], int num, int id_tuile)
+Tuile* creer_tuile (char cote_A, char cote_B, char cote_C, char cote_D, char cote_E, int id_tuile)
 {
     Tuile* T = (Tuile*)malloc (sizeof(Tuile));
     T->cote_A = (Cote*)malloc(sizeof(Cote));
@@ -19,24 +18,17 @@ Tuile* creer_tuile (char cote_A[10], char cote_B[10], char cote_C[10], char cote
     T->cote_D = (Cote*)malloc(sizeof(Cote));
     T->cote_E = (Cote*)malloc(sizeof(Cote));
 
-    T->cote_A->Pion = (Meeple*)malloc(sizeof(Meeple));
-    T->cote_B->Pion = (Meeple*)malloc(sizeof(Meeple));
-    T->cote_C->Pion = (Meeple*)malloc(sizeof(Meeple));
-    T->cote_D->Pion = (Meeple*)malloc(sizeof(Meeple));
-    T->cote_E->Pion = (Meeple*)malloc(sizeof(Meeple));
 
-    strcpy (T->cote_A->type, cote_A);
-    strcpy (T->cote_B->type, cote_B);
-    strcpy (T->cote_C->type, cote_C);
-    strcpy (T->cote_D->type, cote_D);
-    strcpy (T->cote_E->type, cote_E);
-    T->cote_A->vide = 1;
-    T->cote_B->vide = 1;
-    T->cote_C->vide = 1;
-    T->cote_D->vide = 1;
-    T->cote_E->vide = 1;
-    T->nb = num;
-    T->Joue = 1;
+    T->cote_A->type = cote_A;
+    T->cote_B->type = cote_B;
+    T->cote_C->type = cote_C;
+    T->cote_D->type = cote_D;
+    T->cote_E->type = cote_E;
+    T->cote_A->cotient_meeple = 0;
+    T->cote_B->cotient_meeple = 0;
+    T->cote_C->cotient_meeple = 0;
+    T->cote_D->cotient_meeple = 0;
+    T->cote_E->cotient_meeple = 0;
     T->id_tuile = id_tuile;
     return T;
 }
@@ -44,11 +36,6 @@ Tuile* creer_tuile (char cote_A[10], char cote_B[10], char cote_C[10], char cote
 
 void free_tile (Tuile *T)
 {
-    free(T->cote_A->Pion);
-    free(T->cote_B->Pion);
-    free(T->cote_C->Pion);
-    free(T->cote_D->Pion);
-    free(T->cote_E->Pion);
 
     free(T->cote_A);
     free(T->cote_B);
@@ -86,14 +73,12 @@ Tuile* get_tiles_from_file ()
 
     while(!feof(fichier))
     {
-        fscanf(fichier, "%s %s %s %s %s %d ", temp[i].cote_A->type, temp[i].cote_B->type, temp[i].cote_C->type, temp[i].cote_D->type, temp[i].cote_E->type, &temp[i].id_tuile);
-        temp[i].cote_A->vide = 1;
-        temp[i].cote_B->vide = 1;
-        temp[i].cote_C->vide = 1;
-        temp[i].cote_D->vide = 1;
-        temp[i].cote_E->vide = 1;
-        temp[i].nb = i+1;
-        temp[i].Joue = 0;
+        fscanf(fichier, "%c %c %c %c %c %d ", &temp[i].cote_A->type, &temp[i].cote_B->type, &temp[i].cote_C->type, &temp[i].cote_D->type, &temp[i].cote_E->type, &temp[i].id_tuile);
+        temp[i].cote_A->cotient_meeple = 0;
+        temp[i].cote_B->cotient_meeple = 0;
+        temp[i].cote_C->cotient_meeple = 0;
+        temp[i].cote_D->cotient_meeple = 0;
+        temp[i].cote_E->cotient_meeple = 0;
         i++;
 
     }
@@ -118,14 +103,185 @@ void melanger_tuile (Tuile* temp)
 
 void print_tile (Tuile *T)
 {
-    printf ("  %s  \n", T->cote_A->type);
-    printf ("%s %s %s\n", T->cote_D->type, T->cote_E->type, T->cote_B->type);
-    printf ("  %s  \n", T->cote_C->type);
+    printf ("  %c  \n", T->cote_A->type);
+    printf ("%c %c %c\n", T->cote_D->type, T->cote_E->type, T->cote_B->type);
+    printf ("  %c  \n", T->cote_C->type);
 }
 
 
 Tuile* rotate_tuile(Tuile* T)
 {
-    Tuile* temp = creer_tuile (T->cote_B->type, T->cote_C->type, T->cote_D->type, T->cote_A->type, T->cote_E->type, T->nb, T->id_tuile);
-    return temp;
+
+    T = creer_tuile (T->cote_B->type, T->cote_C->type, T->cote_D->type, T->cote_A->type, T->cote_E->type, T->id_tuile);
+    return T;
+}
+
+
+
+
+int pose_meeple (Tuile **P, int ligne, int colonne, int num_meeple, int cote)
+{
+    int pose = 0;
+    switch (cote)
+    {
+    case 1:
+        if (P[ligne][colonne].cote_A->cotient_meeple == 1)
+        {
+            printf("Il y a déjà un meeple\n");
+            pose = 0;
+        }
+        else
+        {
+            P[ligne][colonne].cote_A->num_meeple = num_meeple;
+            
+            P[ligne][colonne].cote_A->cotient_meeple = 1;
+
+            pose = 1;
+        }
+        break;
+
+    case 2:
+        if (P[ligne][colonne].cote_B->cotient_meeple == 1)
+        {
+            printf("Il y a déjà un meeple\n");
+            pose = 0;
+        }
+        else
+        {
+            P[ligne][colonne].cote_B->num_meeple = num_meeple;;
+            P[ligne][colonne].cote_B->cotient_meeple = 1;
+
+            pose = 1;
+        }
+        break;
+
+    case 3:
+        if (P[ligne][colonne].cote_C->cotient_meeple == 1)
+        {
+            printf("Il y a déjà un meeple\n");
+            pose = 0;
+        }
+        else
+        {
+            P[ligne][colonne].cote_C->num_meeple = num_meeple;
+            P[ligne][colonne].cote_C->cotient_meeple = 1;
+
+            pose = 1;
+        }
+        break;
+    
+    case 4:
+        if (P[ligne][colonne].cote_D->cotient_meeple == 1)
+        {
+            printf("Il y a déjà un meeple\n");
+            pose = 0;
+        }
+        else
+        {
+            P[ligne][colonne].cote_D->num_meeple = num_meeple;
+            P[ligne][colonne].cote_D->cotient_meeple = 1;
+
+            pose = 1;
+        }
+        break;
+    
+    case 5:
+        if (P[ligne][colonne].cote_E->cotient_meeple == 1)
+        {
+            printf("Il y a déjà un meeple\n");
+            pose = 0;
+        }
+        else
+        {
+            P[ligne][colonne].cote_E->num_meeple = num_meeple;
+            P[ligne][colonne].cote_E->cotient_meeple = 1;
+
+            pose = 1;
+        }
+        break;
+    default:
+        pose = 0;
+        break;
+    }
+
+    if (P[ligne][colonne].cote_E->type == P[ligne][colonne].cote_A->type )
+    {
+        if (P[ligne][colonne].cote_E->cotient_meeple == 1 || P[ligne][colonne].cote_A->cotient_meeple == 1)
+        {
+            P[ligne][colonne].cote_E->cotient_meeple = 1;
+            P[ligne][colonne].cote_A->cotient_meeple = 1;
+            P[ligne][colonne].cote_E->num_meeple = num_meeple;
+            P[ligne][colonne].cote_A->cotient_meeple = num_meeple;
+        }
+    }
+
+    if ( P[ligne][colonne].cote_E->type == P[ligne][colonne].cote_B->type)
+    {
+        if (P[ligne][colonne].cote_E->cotient_meeple == 1 || P[ligne][colonne].cote_B->cotient_meeple == 1)
+        {
+            P[ligne][colonne].cote_E->cotient_meeple = 1;
+            P[ligne][colonne].cote_B->cotient_meeple = 1;
+            P[ligne][colonne].cote_E->num_meeple = num_meeple;
+            P[ligne][colonne].cote_B->cotient_meeple = num_meeple;
+        }
+    }
+
+    if ( P[ligne][colonne].cote_E->type == P[ligne][colonne].cote_C->type )
+    {
+        if (P[ligne][colonne].cote_E->cotient_meeple == 1 || P[ligne][colonne].cote_C->cotient_meeple == 1)
+        {
+            P[ligne][colonne].cote_E->cotient_meeple = 1;
+            P[ligne][colonne].cote_C->cotient_meeple = 1;
+            P[ligne][colonne].cote_E->num_meeple = num_meeple;
+            P[ligne][colonne].cote_C->cotient_meeple = num_meeple;
+        }
+    }
+
+    if ( P[ligne][colonne].cote_E->type == P[ligne][colonne].cote_D->type )
+    {
+        if (P[ligne][colonne].cote_E->cotient_meeple == 1 || P[ligne][colonne].cote_D->cotient_meeple == 1)
+        {
+            P[ligne][colonne].cote_E->cotient_meeple = 1;
+            P[ligne][colonne].cote_D->cotient_meeple = 1;
+            P[ligne][colonne].cote_E->num_meeple = num_meeple;
+            P[ligne][colonne].cote_D->cotient_meeple = num_meeple;
+        }
+    }
+    
+
+    for (int i=0 ; i<NB_TUILE_MAX ; i++)
+    {
+        for (int j=0 ; j<NB_TUILE_MAX ; j++)
+        {
+            if (P[i][j].vide == 0 )
+            {
+                if (P[i-1][j].cote_C->cotient_meeple == 1 || P[i][j].cote_A->cotient_meeple == 1)
+                {
+                    P[i-1][j].cote_C->cotient_meeple = 1;
+                    P[i][j].cote_A->cotient_meeple = 1;
+                }
+
+                if (P[i+1][j].cote_A->cotient_meeple == 1 || P[i][j].cote_C->cotient_meeple == 1)
+                {
+                    P[i+1][j].cote_A->cotient_meeple = 1;
+                    P[i][j].cote_C->cotient_meeple = 1;
+                }
+
+                if (P[i][j-1].cote_B->cotient_meeple == 1 || P[i][j].cote_D->cotient_meeple == 1)
+                {
+                    P[i][j-1].cote_B->cotient_meeple = 1;
+                    P[i][j].cote_D->cotient_meeple = 1;
+                }
+
+                if (P[i][j+1].cote_D->cotient_meeple == 1 || P[i][j].cote_B->cotient_meeple == 1)
+                {
+                    P[i][j+1].cote_D->cotient_meeple = 1;
+                    P[i][j].cote_B->cotient_meeple = 1;
+                }
+            }
+        }
+    }
+    
+
+    return pose;
 }

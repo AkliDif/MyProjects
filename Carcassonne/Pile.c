@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "Meeple.h"
 #include "Pile.h"
 #include "Plateau.h"
 #include "Player.h"
@@ -15,12 +14,11 @@ int empiler_tuile(Pile* P, Tuile T)
         return 0;
     else 
     {
-        strcpy(P->T[P->nb_tuile].cote_A->type, T.cote_A->type);
-        strcpy(P->T[P->nb_tuile].cote_B->type, T.cote_B->type);
-        strcpy(P->T[P->nb_tuile].cote_C->type, T.cote_C->type);
-        strcpy(P->T[P->nb_tuile].cote_D->type, T.cote_D->type);
-        strcpy(P->T[P->nb_tuile].cote_E->type, T.cote_E->type);
-        P->T[P->nb_tuile].nb = T.nb;
+        P->T[P->nb_tuile].cote_A->type = T.cote_A->type;
+        P->T[P->nb_tuile].cote_B->type = T.cote_B->type;
+        P->T[P->nb_tuile].cote_C->type = T.cote_C->type;
+        P->T[P->nb_tuile].cote_D->type = T.cote_D->type;
+        P->T[P->nb_tuile].cote_E->type = T.cote_E->type;
         P->T[P->nb_tuile].id_tuile = T.id_tuile;
         P->nb_tuile++;
 
@@ -43,11 +41,6 @@ Pile* init_pile ()
         P->T[i].cote_D = (Cote*)malloc(sizeof(Cote));
         P->T[i].cote_E = (Cote*)malloc(sizeof(Cote));
 
-        P->T[i].cote_A->Pion = (Meeple*)malloc(sizeof(Meeple));
-        P->T[i].cote_B->Pion = (Meeple*)malloc(sizeof(Meeple));
-        P->T[i].cote_C->Pion = (Meeple*)malloc(sizeof(Meeple));
-        P->T[i].cote_D->Pion = (Meeple*)malloc(sizeof(Meeple));
-        P->T[i].cote_E->Pion = (Meeple*)malloc(sizeof(Meeple));
     }
     return P;
 }
@@ -57,12 +50,6 @@ void free_pile (Pile* P)
 {
     for (int i=0 ; i < NB_TUILE_MAX ; i++)
     {
-        free(P->T[i].cote_A->Pion);
-        free(P->T[i].cote_B->Pion);
-        free(P->T[i].cote_C->Pion);
-        free(P->T[i].cote_D->Pion);
-        free(P->T[i].cote_E->Pion);
-
         free(P->T[i].cote_A);
         free(P->T[i].cote_B);
         free(P->T[i].cote_C);
@@ -122,7 +109,7 @@ Tuile* depiler_tuile (Pile *P)
         printf ("La pile est vide\n");
         return NULL;
     }
-    Tuile* T = creer_tuile (P->T[P->nb_tuile-1].cote_A->type, P->T[P->nb_tuile-1].cote_B->type, P->T[P->nb_tuile-1].cote_C->type, P->T[P->nb_tuile-1].cote_D->type, P->T[P->nb_tuile-1].cote_E->type, P->T[P->nb_tuile-1].nb, P->T[P->nb_tuile-1].id_tuile);
+    Tuile* T = creer_tuile (P->T[P->nb_tuile-1].cote_A->type, P->T[P->nb_tuile-1].cote_B->type, P->T[P->nb_tuile-1].cote_C->type, P->T[P->nb_tuile-1].cote_D->type, P->T[P->nb_tuile-1].cote_E->type, P->T[P->nb_tuile-1].id_tuile);
     P->nb_tuile --;
     return T;
 }
@@ -133,7 +120,7 @@ void afficher_pile (Pile* P)
     int i = P->nb_tuile-1;
     while (i >= 0)
     {
-        printf ("%s %s %s %s %s %d\n", P->T[i].cote_A->type, P->T[i].cote_B->type, P->T[i].cote_C->type, P->T[i].cote_D->type, P->T[i].cote_E->type, P->T[i].id_tuile);
+        printf ("%c %c %c %c %c \n", P->T[i].cote_A->type, P->T[i].cote_B->type, P->T[i].cote_C->type, P->T[i].cote_D->type, P->T[i].cote_E->type);
         i--;
     }
 }

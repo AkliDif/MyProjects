@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "Meeple.h"
 #include "Pile.h"
 #include "Plateau.h"
 #include "Player.h"
@@ -45,18 +44,11 @@ Tuile** creer_plateau ()
             plateau[i][j].cote_D = (Cote*)malloc(sizeof(Cote));
             plateau[i][j].cote_E = (Cote*)malloc(sizeof(Cote));
 
-
-            plateau[i][j].cote_A->Pion = (Meeple*)malloc(sizeof(Meeple));
-            plateau[i][j].cote_B->Pion = (Meeple*)malloc(sizeof(Meeple));
-            plateau[i][j].cote_C->Pion = (Meeple*)malloc(sizeof(Meeple));
-            plateau[i][j].cote_D->Pion = (Meeple*)malloc(sizeof(Meeple));
-            plateau[i][j].cote_E->Pion = (Meeple*)malloc(sizeof(Meeple)); 
-
-            plateau[i][j].cote_A->vide = 1;
-            plateau[i][j].cote_B->vide = 1;
-            plateau[i][j].cote_C->vide = 1;
-            plateau[i][j].cote_D->vide = 1;
-            plateau[i][j].cote_E->vide = 1;
+            plateau[i][j].cote_A->cotient_meeple = 0;
+            plateau[i][j].cote_B->cotient_meeple = 0;
+            plateau[i][j].cote_C->cotient_meeple = 0;
+            plateau[i][j].cote_D->cotient_meeple = 0;
+            plateau[i][j].cote_E->cotient_meeple = 0;
             
         }
     }
@@ -74,12 +66,6 @@ void free_plateau (Tuile** plateau)
     {
         for (int j=0; j<NB_TUILE_MAX ; j++)
         {
-            free (plateau[i][j].cote_A->Pion);
-            free (plateau[i][j].cote_B->Pion);
-            free (plateau[i][j].cote_C->Pion);
-            free (plateau[i][j].cote_D->Pion);
-            free (plateau[i][j].cote_E->Pion);
-
 
             free (plateau[i][j].cote_A);
             free (plateau[i][j].cote_B);
@@ -98,7 +84,7 @@ void free_plateau (Tuile** plateau)
 }
 
 
-int pose_tuile (Tuile** plateau, Tuile *T, int ligne, int colonne, int num_player)  //ligne et colonne sont les coordonnées de la case ounon va poser la tuile sur le plateau
+int pose_tuile (Tuile** plateau, Tuile *T, int ligne, int colonne )  //ligne et colonne sont les coordonnées de la case ounon va poser la tuile sur le plateau
 {
     int i, j;
     if (T == NULL)
@@ -107,25 +93,20 @@ int pose_tuile (Tuile** plateau, Tuile *T, int ligne, int colonne, int num_playe
         return 0;
     }
     if (plateau[ligne][colonne].vide == 1 && plateau[ligne][colonne].available == 1)
-    {
-        plateau[ligne][colonne].num_player = num_player;
-        strcpy(plateau[ligne][colonne].cote_A->type, T->cote_A->type);
-        strcpy(plateau[ligne][colonne].cote_B->type, T->cote_B->type);
-        strcpy(plateau[ligne][colonne].cote_C->type, T->cote_C->type);
-        strcpy(plateau[ligne][colonne].cote_D->type, T->cote_D->type);
-        strcpy(plateau[ligne][colonne].cote_E->type, T->cote_E->type);
+    {   
+        plateau[ligne][colonne].cote_A->type = T->cote_A->type;
+        plateau[ligne][colonne].cote_B->type = T->cote_B->type;
+        plateau[ligne][colonne].cote_C->type = T->cote_C->type;
+        plateau[ligne][colonne].cote_D->type = T->cote_D->type;
+        plateau[ligne][colonne].cote_E->type = T->cote_E->type;
         plateau[ligne][colonne].vide = 0;
-        plateau[ligne][colonne].nb = T->nb;
 
 
         for (i=0 ; i<NB_TUILE_MAX ; i++)
         {
             for (j=0 ; j<NB_TUILE_MAX ; j++)
             {
-                if (plateau[i][j].vide == 1 && plateau[i][j].available == 1)
-                {
-                    plateau[i][j].available = 0;
-                }
+                plateau[i][j].available = 0;
             }
         }
 
@@ -164,14 +145,14 @@ void affichage_plateau (Tuile ** plateau)
             else
             {
                 printf ("|");
-                if (plateau[i][j].cote_A->vide != 1)
+                if (plateau[i][j].cote_A->cotient_meeple == 1)
                 {
-                    color (tab_color[plateau[i][j].cote_A->Pion->coleur]);
-                    printf ("  %s  ", plateau[i][j].cote_A->type);
+                    color (tab_color[plateau[i][j].cote_A->num_meeple]);
+                    printf ("  %c  ", plateau[i][j].cote_A->type);
                     color (tab_color[0]);
                 }
                 else
-                    printf ("  %s  ", plateau[i][j].cote_A->type);
+                    printf ("  %c  ", plateau[i][j].cote_A->type);
             }
         }
         printf ("\n");
@@ -187,33 +168,33 @@ void affichage_plateau (Tuile ** plateau)
             else
             {
                 printf ("|");
-                if (plateau[i][j].cote_D->vide != 1)
+                if (plateau[i][j].cote_D->cotient_meeple == 1)
                 {
-                    color (tab_color[plateau[i][j].cote_D->Pion->coleur]);
-                    printf ("%s", plateau[i][j].cote_D->type);
+                    color (tab_color[plateau[i][j].cote_D->num_meeple]);
+                    printf ("%c", plateau[i][j].cote_D->type);
                     color (tab_color[0]);
                 }
                 else
-                    printf ("%s", plateau[i][j].cote_D->type);
+                    printf ("%c", plateau[i][j].cote_D->type);
                 
-                if (plateau[i][j].cote_E->vide != 1)
+                if (plateau[i][j].cote_E->cotient_meeple == 1)
                 {
-                    color (tab_color[plateau[i][j].cote_E->Pion->coleur]);
-                    printf (" %s ", plateau[i][j].cote_E->type);
+                    color (tab_color[plateau[i][j].cote_E->num_meeple]);
+                    printf (" %c ", plateau[i][j].cote_E->type);
                     color (tab_color[0]);
                 }
                 else
-                    printf (" %s ", plateau[i][j].cote_E->type);
+                    printf (" %c ", plateau[i][j].cote_E->type);
                 
 
-                if (plateau[i][j].cote_B->vide != 1)
+                if (plateau[i][j].cote_B->cotient_meeple == 1)
                 {
-                    color (tab_color[plateau[i][j].cote_B->Pion->coleur]);
-                    printf ("%s", plateau[i][j].cote_B->type);
+                    color (tab_color[plateau[i][j].cote_B->num_meeple]);
+                    printf ("%c", plateau[i][j].cote_B->type);
                     color (tab_color[0]);
                 }
                 else
-                    printf ("%s", plateau[i][j].cote_B->type);
+                    printf ("%c", plateau[i][j].cote_B->type);
 
             }
         }
@@ -230,14 +211,15 @@ void affichage_plateau (Tuile ** plateau)
             }
             else
             {
-                if (plateau[i][j].cote_C->vide != 1)
+                printf ("|");
+                if (plateau[i][j].cote_C->cotient_meeple == 1)
                 {
-                    color (tab_color[plateau[i][j].cote_C->Pion->coleur]);
-                    printf ("  %s  ", plateau[i][j].cote_C->type);
+                    color (tab_color[plateau[i][j].cote_C->num_meeple]);
+                    printf ("  %c  ", plateau[i][j].cote_C->type);
                     color (tab_color[0]);
                 }
                 else
-                    printf ("  %s  ", plateau[i][j].cote_C->type);
+                    printf ("  %c  ", plateau[i][j].cote_C->type);
 
             }
         }
@@ -259,7 +241,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
             {   
                 if (i-1 >= 0 && j-1 >= 0 && j+1 <= NB_TUILE_MAX && i-2 >=0 && plateau[i-1][j].vide == 1 )
                 {
-                    while (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) != 0 && nb_rotate <4)
+                    while (plateau[i][j].cote_A->type != temp->cote_C->type  && nb_rotate <4)
                     {
                         temp = rotate_tuile (temp);
                         nb_rotate++;
@@ -267,7 +249,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i-1][j-1].vide == 0 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i-1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-2][j].cote_C->type == temp->cote_A->type && plateau[i-1][j+1].cote_D->type == temp->cote_B->type && plateau[i-1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -277,7 +259,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-2][j].cote_C->type == temp->cote_A->type && plateau[i-1][j+1].cote_D->type == temp->cote_B->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -287,7 +269,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 0 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i-1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-2][j].cote_C->type == temp->cote_A->type && plateau[i-1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -297,7 +279,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 0 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i-1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-1][j+1].cote_D->type == temp->cote_B->type && plateau[i-1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -307,7 +289,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-2][j].cote_C->type, temp->cote_A->type) == 0)
+                        if ( plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-2][j].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -317,7 +299,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 0 && plateau[i-2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-1][j+1].cote_D->type == temp->cote_B->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -327,7 +309,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 0 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type && plateau[i-1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -337,7 +319,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i-1][j+1].vide == 1 && plateau[i-2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_A->type, temp->cote_C->type) == 0)
+                        if (plateau[i][j].cote_A->type == temp->cote_C->type)
                         {
                             plateau[i-1][j].available = 1;
                             posable = 1;
@@ -352,7 +334,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                 if (i+1 <= NB_TUILE_MAX && j-1 >= 0 && j+1 <= NB_TUILE_MAX && i+2 <=NB_TUILE_MAX && plateau[i+1][j].vide == 1 )
                 {
-                    while (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) != 0 && nb_rotate <4)
+                    while (plateau[i][j].cote_C->type != temp->cote_A->type && nb_rotate <4)
                     {
                         temp = rotate_tuile (temp);
                         nb_rotate++;
@@ -360,7 +342,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i+1][j-1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+2][j].cote_A->type == temp->cote_C->type && plateau[i+1][j+1].cote_D->type == temp->cote_B->type && plateau[i+1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -370,7 +352,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+2][j].cote_A->type == temp->cote_C->type && plateau[i+1][j+1].cote_D->type == temp->cote_B->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -380,7 +362,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 0 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+2][j].cote_A->type == temp->cote_C->type && plateau[i+1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -390,7 +372,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if ( plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+1][j+1].cote_D->type == temp->cote_B->type && plateau[i+1][j-1].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -400,7 +382,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+2][j].cote_A->type, temp->cote_C->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+2][j].cote_A->type == temp->cote_C->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -410,7 +392,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i+2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+1][j+1].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+1][j+1].cote_D->type == temp->cote_B->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -420,7 +402,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 0 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0 && strcmp (plateau[i+1][j-1].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type && plateau[i+1][j-1].cote_B->type == temp->cote_D->type )
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
@@ -430,16 +412,13 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i+1][j-1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i+2][j].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i+1][j].available = 1;
                             posable = 1;
 
                         }
                     }
-
-
-                    
                 }
 
     /*---------------------------------------------------------------------------------------------------------------*/            
@@ -450,7 +429,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                 if (j-1 >= 0 && i-1 >= 0 && i+1 <= NB_TUILE_MAX && j-2 >=0 && plateau[i][j-1].vide == 1 )
                 {
-                    while (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) != 0 && nb_rotate <4)
+                    while ( plateau[i][j].cote_D->type != temp->cote_B->type && nb_rotate <4)
                     {
                         temp = rotate_tuile (temp);
                         nb_rotate++;
@@ -458,7 +437,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i-1][j-1].vide == 0 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j-1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i][j-2].cote_B->type == temp->cote_D->type && plateau[i+1][j-1].cote_A->type == temp->cote_C->type && plateau[i-1][j-1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -469,7 +448,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j-1].cote_A->type, temp->cote_C->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i][j-2].cote_B->type == temp->cote_D->type && plateau[i+1][j-1].cote_A->type == temp->cote_C->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -479,7 +458,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 0 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i-1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i][j-2].cote_B->type == temp->cote_D->type && plateau[i-1][j-1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -489,7 +468,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 0 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i-1][j-1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i+1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type  && plateau[i-1][j-1].cote_A->type ==  temp->cote_C->type && plateau[i+1][j-1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -499,7 +478,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j-2].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i][j-2].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -509,7 +488,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 0 && plateau[i][j-2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i+1][j-1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -519,7 +498,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i-1][j-1].vide == 0 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j-1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j-1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type && plateau[i+1][j-1].cote_A->type == temp->cote_C->type && plateau[i-1][j-1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -529,7 +508,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j-1].vide == 1 && plateau[i+1][j-1].vide == 1 && plateau[i][j-2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i][j].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_D->type == temp->cote_B->type )
                         {
                             plateau[i][j-1].available = 1;
                             posable = 1;
@@ -549,7 +528,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                 if (j+1 <= NB_TUILE_MAX && i-1 >= 0 && i+1 <= NB_TUILE_MAX && j+2 <=NB_TUILE_MAX && plateau[i][j+1].vide == 1 )
                 {
-                    while (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) != 0 && nb_rotate <4)
+                    while (plateau[i][j].cote_B->type != temp->cote_D->type && nb_rotate <4)
                     {
                         temp = rotate_tuile (temp);
                         nb_rotate++;
@@ -557,7 +536,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j+1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type && plateau[i][j+2].cote_D->type == temp->cote_B->type && plateau[i+1][j+1].cote_A->type == temp->cote_C->type && plateau[i-1][j+1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -567,7 +546,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type  && plateau[i][j+2].cote_D->type == temp->cote_B->type && plateau[i+1][j+1].cote_A->type == temp->cote_C->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -577,7 +556,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
                     
                     if (plateau[i-1][j+1].vide == 0 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0 && strcmp (plateau[i-1][j+1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type  && plateau[i][j+2].cote_D->type == temp->cote_B->type && plateau[i-1][j+1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -587,7 +566,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 0 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0 && strcmp (plateau[i-1][j+1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type && plateau[i+1][j+1].cote_A->type == temp->cote_C->type && plateau[i-1][j+1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -597,7 +576,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 0)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i][j+2].cote_D->type, temp->cote_B->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type && plateau[i][j+2].cote_D->type == temp->cote_B->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -607,7 +586,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 0 && plateau[i][j+2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i+1][j+1].cote_A->type, temp->cote_C->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type && plateau[i+1][j+1].cote_A->type == temp->cote_C->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -617,7 +596,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 0 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0 && strcmp (plateau[i-1][j+1].cote_C->type, temp->cote_A->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type  && plateau[i-1][j+1].cote_C->type == temp->cote_A->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -627,7 +606,7 @@ int update_plateau (Tuile** plateau, Tuile *T)
 
                     if (plateau[i-1][j+1].vide == 1 && plateau[i+1][j+1].vide == 1 && plateau[i][j+2].vide == 1)
                     {
-                        if (strcmp (plateau[i][j].cote_B->type, temp->cote_D->type) == 0)
+                        if (plateau[i][j].cote_B->type == temp->cote_D->type)
                         {
                             plateau[i][j+1].available = 1;
                             posable = 1;
@@ -635,36 +614,12 @@ int update_plateau (Tuile** plateau, Tuile *T)
                         }
                     }
                 }
-
             }
         }
     }
+
 
     return posable;
 
 }
 
-int route_complete (Tuile** plateau, int x, int y, int *score)
-{
-
-    int nb_tiles = 2, complete = 1;
-
-	if (strcmp(plateau[y][x].cote_A->type, "R") == 0 )
-    {
-        y--;
-        while (strcmp(plateau[y][x].cote_E->type, "R") == 0)
-        {
-                nb_tiles++;
-                if (strcmp(plateau[y][x].cote_A->type, "R") == 0 )
-                    y--;
-                else if (strcmp(plateau[y][x].cote_B->type, "R") == 0 )
-                    x--;
-                else if (strcmp(plateau[y][x].cote_D->type, "R") == 0 )
-                    x++;
-            if (plateau[y][x].vide == 1)
-                complete = 0;
-        }
-
-        *score += 1 * nb_tiles;
-    }
-}

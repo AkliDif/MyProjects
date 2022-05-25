@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Sat May 21 18:03:19 2022
+# Make data base, printed on Mon May 23 23:04:15 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
 SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-5c5ca025-dd37-479c-9e95-d35cebd05bad.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f98cc90b-c65f-4021-b931-95ae85a73acd.sock
 # environment
 VSCODE_CWD = /home/akli/Bureau/Studies/MyProjects/Carcassonne
 # default
@@ -39,7 +39,7 @@ PWD = /home/akli/Bureau/Studies/MyProjects/Carcassonne
 # environment
 XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 # environment
-OLDPWD = /home/akli/Bureau/Studies/MyProjects
+OLDPWD = /home/akli
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -51,13 +51,13 @@ VSCODE_CODE_CACHE_PATH = /home/akli/.config/Code/CachedData/c3511e6c69bb39013c4a
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.0P7GM1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.6YVCM1
 # default
 .LOADED := 
 # default
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
 # environment
-GNOME_TERMINAL_SERVICE = :1.205
+GNOME_TERMINAL_SERVICE = :1.2835
 # makefile
 MAKEFLAGS = pqrR
 # makefile
@@ -91,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 14832
+VSCODE_PID = 50424
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/akli:@/tmp/.ICE-unix/1512,unix/akli:/tmp/.ICE-unix/1512
+SESSION_MANAGER = local/akli:@/tmp/.ICE-unix/1858,unix/akli:/tmp/.ICE-unix/1858
 # automatic
 *F = $(notdir $*)
 # environment
@@ -121,7 +121,7 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 1
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/aa60b266_182b_4a6e_822f_f4898255d8a1
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/7beeaa81_ff77_4ee8_8937_317d5a5d7644
 # environment
 MAKELEVEL := 0
 # default
@@ -159,7 +159,7 @@ LOGNAME = akli
 # makefile
 .DEFAULT_GOAL := all
 # environment
-SYSTEMD_EXEC_PID = 1655
+SYSTEMD_EXEC_PID = 1883
 # environment
 DISPLAY = :0
 # environment
@@ -217,21 +217,15 @@ GDMSESSION = ubuntu
 
 # Directories
 
-# . (device 2053, inode 49418058): 26 files, no impossibilities.
+# . (device 2053, inode 49418058): 22 files, no impossibilities.
 
-# 26 files, no impossibilities in 1 directories.
+# 22 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
 
 # Files
-
-# Not a target:
-Meeple.c:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
 
 Pile.o: Pile.c
 #  Implicit rule search has not been done.
@@ -240,10 +234,30 @@ Pile.o: Pile.c
 #  recipe to execute (from 'Makefile', line 15):
 	gcc -o Pile.o -c Pile.c
 
+main_SDL.o: main_SDL.c
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 7):
+	gcc -c main_SDL.c -o main_SDL.o `sdl2-config --cflags --libs` -lSDL2_image
+
+carcassonne_SDL: main_SDL.o Tuile.o Player.o Pile.o Plateau.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 24):
+	gcc -o carcassonne_SDL main_SDL.o Tuile.o Player.o Pile.o Plateau.o `sdl2-config --cflags --libs` -lSDL2_image
+
+# Not a target:
+main_SDL.c:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-12 14:46:01.280858
+#  Last modified 2022-05-23 23:04:03.306006224
 #  File has been updated.
 #  Successfully updated.
 
@@ -251,21 +265,21 @@ Player.o: Player.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 9):
+#  recipe to execute (from 'Makefile', line 12):
 	gcc -o Player.o -c Player.c
 
 mrproper: clean
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 27):
+#  recipe to execute (from 'Makefile', line 30):
 	rm -rf carcassonne
 
 clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 24):
+#  recipe to execute (from 'Makefile', line 27):
 	rm -rf *.o
 
 # Not a target:
@@ -285,7 +299,7 @@ Tuile.o: Tuile.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 6):
+#  recipe to execute (from 'Makefile', line 9):
 	gcc -o Tuile.o -c Tuile.c
 
 # Not a target:
@@ -296,6 +310,7 @@ Tuile.c:
 
 # Not a target:
 Plateau.c:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -312,7 +327,7 @@ Player.c:
 #  Modification time never checked.
 #  File has not been updated.
 
-all: carcassonne
+all: carcassonne carcassonne_SDL
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
@@ -324,12 +339,11 @@ all: carcassonne
 # Not a target:
 main.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-18 10:42:12.476247
+#  Last modified 2022-05-23 22:42:52.261724411
 #  File has been updated.
 #  Successfully updated.
 
 main.o: main.c
- 
 #  Implicit rule search has not been done.
 #  Implicit/static pattern stem: ''
 #  File does not exist.
@@ -354,24 +368,18 @@ main.o: main.c
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
 #  recipe to execute (from 'Makefile', line 4):
-	gcc -c main.c -o main.o `sdl2-config --cflags --libs` -lSDL2_image
+	gcc -c main.c -o main.o
+	
 
-carcassonne: main.o Tuile.o Player.o Meeple.o Pile.o Plateau.o
+carcassonne: main.o Tuile.o Player.o Pile.o Plateau.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-05-13 23:32:47.350577
+#  Last modified 2022-05-23 22:59:51.349029262
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/3=0%
 #  recipe to execute (from 'Makefile', line 21):
-	gcc -o carcassonne main.o Tuile.o Player.o Meeple.o Pile.o Plateau.o `sdl2-config --cflags --libs` -lSDL2_image
-
-Meeple.o: Meeple.c
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-#  recipe to execute (from 'Makefile', line 12):
-	gcc -o Meeple.o -c Meeple.c
+	gcc -o carcassonne main.o Tuile.o Player.o Pile.o Plateau.o
 
 # Not a target:
 .SUFFIXES:
@@ -380,19 +388,19 @@ Meeple.o: Meeple.c
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=19/1024=2%, Rehash=0, Collisions=0/46=0%
+# Load=20/1024=2%, Rehash=0, Collisions=0/53=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 39 / storage = 356 B / avg = 9 B
-# current buf: size = 8162 B / used = 356 B / count = 39 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 35 / storage = 332 B / avg = 9 B
+# current buf: size = 8162 B / used = 332 B / count = 35 / avg = 9 B
 
-# strcache performance: lookups = 70 / hit rate = 44%
+# strcache performance: lookups = 73 / hit rate = 52%
 # hash-table stats:
-# Load=39/8192=0%, Rehash=0, Collisions=0/70=0%
-# Finished Make data base on Sat May 21 18:03:19 2022
+# Load=35/8192=0%, Rehash=0, Collisions=0/73=0%
+# Finished Make data base on Mon May 23 23:04:15 2022
 
  

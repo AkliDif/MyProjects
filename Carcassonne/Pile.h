@@ -17,7 +17,6 @@ Pile* init_pile();
 Pile* creer_pile ();
 int empiler_tuile(Pile* P, Tuile T);
 Tuile* depiler_tuile (Pile *P);
-void afficher_pile (Pile* P);
 void free_pile (Pile* P);
 
 #endif

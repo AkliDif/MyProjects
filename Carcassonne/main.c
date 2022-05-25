@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "Meeple.h"
 #include "Pile.h"
 #include "Plateau.h"
 #include "Player.h"
@@ -10,9 +9,7 @@
 
 int main (void)
 {
-    int nb_player, i, j, ligne, colonne, point = 0, c;
-    
-    char  rotate;
+    int nb_player, i, j, ligne, colonne, point = 0, c, pose_pion,rotate;;
         
     printf ("\nBienvenue au Jeu Carcasonne :)\n");
     printf ("\nChoisir le nombre de joueurs (2 à 5 joueurs)\n");
@@ -31,21 +28,6 @@ int main (void)
         tab_player[i] = create_player(i+1);
     }
 
-    Meeple* noire = (Meeple*)malloc(sizeof(Meeple));
-    noire->coleur = 1;
-
-    Meeple* rouge = (Meeple*)malloc(sizeof(Meeple));
-    rouge->coleur = 2;
-
-    Meeple* vert = (Meeple*)malloc(sizeof(Meeple));
-    vert->coleur = 3;
-
-    Meeple* blue = (Meeple*)malloc(sizeof(Meeple));
-    blue->coleur = 4;
-
-    Meeple* magenta = (Meeple*)malloc(sizeof(Meeple));
-    magenta->coleur = 5;
-
     Pile* P = creer_pile ();
 
     
@@ -55,7 +37,7 @@ int main (void)
     
     pioche = depiler_tuile (P);
     
-    if (pose_tuile (Plateau, pioche, 35, 35, 0) != 1)
+    if (pose_tuile (Plateau, pioche, 35, 35) != 1)
     {
         fprintf(stderr, "\nTuile de départ non déposé\n");
         exit (EXIT_FAILURE);
@@ -67,7 +49,7 @@ int main (void)
     int num_player = 0;
     
 
-    while (P->nb_tuile > 60)
+    while (P->nb_tuile > 66)
     {
         num_player = (num_player%nb_player)+1;
 
@@ -87,22 +69,32 @@ int main (void)
             affichage_plateau (Plateau);
             print_tile (pioche);
 
+            printf ("Retourner la tuile \n1.Oui\n2.Non\n");
+            scanf ("%d", &rotate);
+
+            while (rotate == 1)
+            {
+                pioche = rotate_tuile(pioche);
+                print_tile(pioche);
+                printf ("Retourner la tuile \n1.Oui\n2.Non\n");
+                scanf ("%d", &rotate);
+            }
+            
             printf("\nOù voulez vous deposer la tuile\nLigne > \n");
             scanf("%d", &ligne);
             printf ("\nColonne >\n");
             scanf ("%d", &colonne);
 
 
-            while (pose_tuile (Plateau, pioche, ligne, colonne, num_player) != 1)
+            while (pose_tuile (Plateau, pioche, ligne, colonne) != 1)
             {
                 printf ("La tuile n'a pas pu etre posée à cette case, rééessayer alleurs!\nLigne >\n");
                 scanf("%d", &ligne);
                 printf ("\nColonne >\n");
                 scanf ("%d", &colonne);
             }
-
-
             free_tile (pioche);
+
 
         }
         else
@@ -113,22 +105,23 @@ int main (void)
             
         
         }
-
-        if (Plateau[ligne][colonne].cote_A->vide == 1 || Plateau[ligne][colonne].cote_B->vide == 1 || Plateau[ligne][colonne].cote_C->vide == 1 || Plateau[ligne][colonne].cote_D->vide == 1 || Plateau[ligne][colonne].cote_E->vide == 1)
+        if (Plateau[ligne][colonne].cote_A->cotient_meeple == 0 || Plateau[ligne][colonne].cote_B->cotient_meeple == 0 || Plateau[ligne][colonne].cote_C->cotient_meeple == 0 || Plateau[ligne][colonne].cote_D->cotient_meeple == 0 || Plateau[ligne][colonne].cote_E->cotient_meeple == 0)
         {
-            printf ("\nOù voulez deposer le pion\n");
-            scanf("%d", &c);
+            printf ("Jouer un pion\n 1.Oui\n 2.Non\n");
+            scanf ("%d", &pose_pion);
+            if (pose_pion == 1)
+            {
+                printf ("\nOù voulez deposer le pion\n");
+                scanf("%d", &c);
 
-            if (num_player == 1)
-                pose_meeple (&Plateau[ligne][colonne], noire, c, num_player);
-            if (num_player == 2)
-                pose_meeple (&Plateau[ligne][colonne], rouge, c, num_player);
-            if (num_player == 3)
-                pose_meeple (&Plateau[ligne][colonne], vert, c, num_player);
-            if (num_player == 4)
-                pose_meeple (&Plateau[ligne][colonne], blue, c, num_player);
-            if (num_player == 5)
-                pose_meeple (&Plateau[ligne][colonne], magenta, c, num_player);
+                while (pose_meeple (Plateau, ligne, colonne, num_player, c) != 1)
+                {
+                    printf ("\nOù voulez deposer le pion\n");
+                    scanf("%d", &c);
+                    pose_meeple (Plateau, ligne, colonne, num_player, c);
+                }
+
+            }
         }
     }
     
