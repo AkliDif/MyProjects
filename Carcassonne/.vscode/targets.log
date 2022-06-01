@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon May 23 23:04:15 2022
+# Make data base, printed on Mon May 30 12:14:09 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
 SSH_AGENT_LAUNCHER = gnome-keyring
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f98cc90b-c65f-4021-b931-95ae85a73acd.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-42a42240-e300-4122-be76-9e0afd335f01.sock
 # environment
 VSCODE_CWD = /home/akli/Bureau/Studies/MyProjects/Carcassonne
 # default
@@ -51,13 +51,13 @@ VSCODE_CODE_CACHE_PATH = /home/akli/.config/Code/CachedData/c3511e6c69bb39013c4a
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.6YVCM1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.1BM9M1
 # default
 .LOADED := 
 # default
 .INCLUDE_DIRS = /usr/local/include /usr/include /usr/include
 # environment
-GNOME_TERMINAL_SERVICE = :1.2835
+GNOME_TERMINAL_SERVICE = :1.2506
 # makefile
 MAKEFLAGS = pqrR
 # makefile
@@ -91,13 +91,13 @@ MAKEFILE_LIST := Makefile
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-VSCODE_PID = 50424
+VSCODE_PID = 98082
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # environment
-SESSION_MANAGER = local/akli:@/tmp/.ICE-unix/1858,unix/akli:/tmp/.ICE-unix/1858
+SESSION_MANAGER = local/akli:@/tmp/.ICE-unix/2569,unix/akli:/tmp/.ICE-unix/2569
 # automatic
 *F = $(notdir $*)
 # environment
@@ -121,7 +121,7 @@ XMODIFIERS = @im=ibus
 # environment
 SHLVL = 1
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/7beeaa81_ff77_4ee8_8937_317d5a5d7644
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/209a121d_9ab8_4c3f_bdac_fe225cc43677
 # environment
 MAKELEVEL := 0
 # default
@@ -159,7 +159,7 @@ LOGNAME = akli
 # makefile
 .DEFAULT_GOAL := all
 # environment
-SYSTEMD_EXEC_PID = 1883
+SYSTEMD_EXEC_PID = 2590
 # environment
 DISPLAY = :0
 # environment
@@ -295,6 +295,7 @@ Plateau.o: Plateau.c
 #  recipe to execute (from 'Makefile', line 18):
 	gcc -o Plateau.o -c Plateau.c
 
+ 
 Tuile.o: Tuile.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -310,7 +311,6 @@ Tuile.c:
 
 # Not a target:
 Plateau.c:
- 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -339,7 +339,7 @@ all: carcassonne carcassonne_SDL
 # Not a target:
 main.c:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-23 22:42:52.261724411
+#  Last modified 2022-05-23 23:04:21.098059529
 #  File has been updated.
 #  Successfully updated.
 
@@ -373,7 +373,7 @@ main.o: main.c
 
 carcassonne: main.o Tuile.o Player.o Pile.o Plateau.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-05-23 22:59:51.349029262
+#  Last modified 2022-05-23 23:04:57.962164609
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -401,6 +401,6 @@ carcassonne: main.o Tuile.o Player.o Pile.o Plateau.o
 # strcache performance: lookups = 73 / hit rate = 52%
 # hash-table stats:
 # Load=35/8192=0%, Rehash=0, Collisions=0/73=0%
-# Finished Make data base on Mon May 23 23:04:15 2022
+# Finished Make data base on Mon May 30 12:14:09 2022
 
  

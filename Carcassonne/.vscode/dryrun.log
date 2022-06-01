@@ -1,7 +1,8 @@
-make --dry-run --keep-going --print-directory
+make --dry-run --always-make --keep-going --print-directory
 make: Entering directory '/home/akli/Bureau/Studies/MyProjects/Carcassonne'
 gcc -c main.c -o main.o
 gcc -o Tuile.o -c Tuile.c
+ 
 gcc -o Player.o -c Player.c
 gcc -o Pile.o -c Pile.c
 gcc -o Plateau.o -c Plateau.c
