@@ -1,0 +1,112 @@
+/**************************************************** GENERAL ************************************************/
+*{ margin: 0; padding: 0;}
+
+html{font-size: 90%;}
+
+body, html{height:100%;}
+
+a{ text-decoration:none ; color: #0000ff; }
+.conteneur{ margin: 0 auto; max-width: 1170px;}
+/**************************************************** HAUT ************************************************/
+
+
+.mainHead {
+    background-color: #04baf6;
+}
+.mainHead h1 {font-size: 18px;}
+.mainHead li{font-size: 16px;}
+
+nav
+{
+    min-height: 10vh;
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: auto;
+    padding: 0.5rem;
+}
+
+nav ul
+{
+    display: flex;
+    flex: 1 1;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+}
+.logo {flex: 1 1;}
+
+/**************************************************** MILIEU ************************************************/
+section{ padding: 30px; max-width: 1170px; min-height: 100%; position: relative;
+    margin:0 auto; }
+/**************************************************** BAS ************************************************/
+footer{ background: #04baf6; color: #000000; text-align: center;
+    position:relative;
+    clear: both;
+    bottom:0;
+    width: 100%;
+}
+/**************************************************** GENERAL ************************************************/
+.erreur{ background: #ff0000; padding: 5px; margin: 5px;  }
+.validation{ background: #669933; padding: 5px; margin: 5px; }
+.cadre{ margin: auto; border: 1px solid #c0c0c0; width: 30%; align-items: center;}
+.cadre  h2{ background: #c0c0c0; margin: 0; text-align: center; font-size: 15px; padding: 5px; }
+.cadre  p{ padding: 10px; }
+.centre {text-align: center;}
+
+.forms { 
+    margin: auto; 
+    border: 3px solid #c0c0c0; 
+    width: 20%; 
+    align-items: center; 
+    padding-left: 2cm;
+    padding-right: 2cm;
+    padding-bottom: 1cm;
+    text-align: left;
+    font-size: 26;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+
+.forms-titles {
+    text-align: center;
+    margin: auto; 
+    width: 20%; 
+    padding-left: 2cm;
+    padding-right: 2cm;
+    padding-bottom: 0.5cm;
+    padding-top: 0.5cm;
+    font-size: 20;
+    font-weight: bold;
+    border: 3px solid #04baf6; 
+    background-color: #04baf6;
+}
+
+/**************************************************** BOUTIQUE ************************************************/
+.boutique-gauche{ float: left; width: 30%; background: #f2f2f2; min-height: 500px; margin-right: 10%; padding-top: 10px; text-align: center; }
+.boutique-gauche  ul{ list-style: none; padding: 0; }
+.boutique-gauche  ul  li  a{ display: block; padding: 10px; }
+.boutique-gauche  ul  li  a:hover{ background: #04baf6; color: #fff; }
+.boutique-droite{float: left; width: 60%; }
+.boutique-produit{ float: left; width: 30%; text-align: center; padding: 5%; border-bottom: 1px solid #c0c0c0; }
+.boutique-produit:hover{ background: #c0c0c0; }
+
+.fiche_produit {
+    margin: auto; 
+    border: 3px solid #c0c0c0; 
+    width: 20%; 
+    align-items: center; 
+    padding-left: 2cm;
+    padding-right: 2cm;
+    padding-bottom: 1cm;
+    text-align: left;
+    font-size: 26;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.fiche_produit h2 {font-weight: bold;}
+/**************************************************** DIVERS ************************************************/
+table{ border-collapse: collapse; border-color: #000000;}
+table tr td{
+text-align: center;
+}
+td, th{ padding: 5px; }
